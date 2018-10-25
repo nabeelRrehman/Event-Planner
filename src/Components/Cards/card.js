@@ -34,120 +34,51 @@ class Card extends Component {
 
     componentDidMount() {
 
-        const { event, reserved } = this.state
-
-        // firebase.database().ref('/events/').on('child_added', (snapShot) => {
-
-        //         for (var key in snapShot.val()) {
-        //             if (key === this.props.userEvent) {
-        //                 console.log(snapShot.val()[key])
-        //                 const data = snapShot.val()[key]
-        //                 const card = {
-        //                     image: data.imageUrl,
-        //                     name: data.name,
-        //                     detail: data.detail,
-        //                     ticket: data.ticket,
-        //                     price: data.price,
-        //                     key: this.props.userEvent,
-        //                     seats: data.seatingArrange
-        //                 }
-        //                 event.push(card)
-        //                 const totalSeats = []
-        //                 const from = data.seatingArrange.from
-        //                 const to = data.seatingArrange.to
-        //                 for (var i = Number(from); i <= Number(to); i++) {
-        //                     totalSeats.push(i)
-        //                 }
-
-        //                 this.setState({ event, totalSeats }, () => {
-        //                     console.log(this.state.totalSeats)
-        //                 })
-        //             }
-        //         }
-
-        //     firebase.database().ref('users').on('value', (snapShots) => {
-        //         const totalReserved = []
-        //         for (var key1 in snapShots.val()) {
-        //             // console.log(snapShots.val())
-        //             for (var key in snapShots.val()[key1]) {
-        //                 const value = snapShots.val()[key1][key];
-        //                 if (key === 'buyEvents') {
-        //                     for (var key2 in value) {
-        //                         if (key2 === this.props.userEvent) {
-        //                             firebase.database().ref('/users/' + key1 + '/buyEvents/' + key2).on('child_added', (snaps) => {
-        //                                 console.log(snaps.val())
-        //                                 totalReserved.push(...snaps.val())
-        //                                 this.setState({ totalReserved }, () => {
-        //                                     console.log('total reserved', this.state.totalReserved)
-        //                                     if (this.state.totalReserved.length === this.state.totalSeats.length) {
-        //                                         reserved.push(this.props.userEvent)
-        //                                         this.setState({ reserved }, () => {
-        //                                             console.log(this.state.reserved, 'seatsreserved key')
-        //                                         })
-        //                                     }
-        //                                 })
-        //                             })
-        //                         }
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     })
-        // })
-        // console.log(this.props.userEvent)
-        // setTimeout(() => {
-
-        //     if (this.props.card) {
-        //         this.props.card.map(items => {
-        //             return (
-        //                 this.props.goings.map(it => {
-        //                     items.key === it &&
-        //                         console.log(items, 'items')
-        //                 })
-        //             )
-        //         })
-        //     }
-        // }, 1000);
-        // this.setState({ event: this.props.Uevent })
-
+        const props = this.props
+        console.log('evevntsssss', props)
+        // this.gettingEvents(props)
+        this.setState({ event: this.props.Uevent , reserved : this.props.reserved})
     }
 
     componentWillReceiveProps(props) {
-        
+
+        this.gettingEvents(props)
+
+    }
+
+    gettingEvents(props) {
         if (props.Uevent) {
             console.log(props.Uevent)
             this.setState({ event: props.Uevent })
         }
         if (props.goings) {
+            // console.log(props.goings,'props goings')
             this.setState({ goings: props.goings })
         }
         if (props.notgoings !== this.props.notgoings) {
             console.log(props.notgoings)
             this.setState({ notgoings: props.notgoings })
         }
-
+        if (props.reserved) {
+            console.log(props.reserved, 'reserved seats')
+            this.setState({ reserved: props.reserved })
+        }
     }
 
     interest(id, key) {
-        // const { goings } = this.state
-        // const user = localStorage.getItem('userUid')
-        // firebase.database().ref('/users/' + user + '/goingEvents/' + key).remove()
-        // goings.splice(key, 1)
-        // this.setState({ goings })
+
         const { getInterested, userDetails } = this.props
         getInterested(id, key, userDetails.userUid)
+        this.setState({ goings: this.props.goings })
+
     }
 
     notGoings(id, key) {
-        // const { notgoings } = this.state
-        // const user = localStorage.getItem('userUid')
 
-        // firebase.database().ref('/users/' + user + '/notGoingEvents/' + key).remove()
-        // notgoings.splice(key, 1)
-        // this.setState({ notgoings })
         const { getNotInterested, userDetails } = this.props
 
         getNotInterested(id, key, userDetails.userUid)
+        this.setState({ notgoings: this.props.notgoings })
     }
 
     eventCard(image, title, description, ticket, price, index, key) {
@@ -256,7 +187,8 @@ function mapStateToProps(state) {
         userDetails: state.authReducer.USERDETAIL,
         goings: state.rootReducer.GOING,
         card: state.eventsReducer.CARD,
-        notgoings: state.rootReducer.NOTGOING
+        notgoings: state.rootReducer.NOTGOING,
+        reserved: state.eventsReducer.RESERVEDSEATS,
     })
 }
 

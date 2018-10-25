@@ -43,7 +43,7 @@ class Routers extends Component {
                 if (userDetails.role === 'organizer') {
                     getEvents(userDetails.userUid)
                 } else {
-                    console.log('atte', userDetails)
+                    // console.log('atte', userDetails)
                     getEventAttendee()
                 }
             }

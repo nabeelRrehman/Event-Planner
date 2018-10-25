@@ -5,25 +5,56 @@ import History from '../../History/History';
 import swal from 'sweetalert2'
 
 export function SignUpAuth(user) {
+    swal({
+        onOpen: () => {
+            swal.showLoading()
+        }
+    })
     return dispatch => {
         firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
             .then((success) => {
                 delete user.password
                 console.log('success signup')
+                swal({
+                    position: 'center',
+                    type: 'success',
+                    title: 'Successfully Registered',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
                 firebase.database().ref('/users/' + success.user.uid + '/userDetails').set(user)
                 History.push('/')
                 dispatch({ type: actionTypes.CURRENTUSER, payload: user })
+            })
+            .catch((error) => {
+                swal({
+                    type: 'error',
+                    title: 'Error',
+                    text: error.message
+                })
             })
     }
 }
 
 
 export function SignInAuth(user) {
+    swal({
+        onOpen: () => {
+            swal.showLoading()
+        }
+    })
     return dispatch => {
         firebase.auth().signInWithEmailAndPassword(user.email, user.password)
             .then((success) => {
                 delete user.password
                 console.log('user signin success')
+                swal({
+                    position: 'center',
+                    type: 'success',
+                    title: 'Successfully Login',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
                 firebase.database().ref('users/' + success.user.uid + '/userDetails').on('value', (snapShot) => {
                     console.log(snapShot.val())
                     const currentUser = snapShot.val()
@@ -38,6 +69,13 @@ export function SignInAuth(user) {
                     console.log("Account linking success", user);
                     delete user.password
                     console.log('user signin success')
+                    swal({
+                        position: 'center',
+                        type: 'success',
+                        title: 'Successfully Linked',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
                     firebase.database().ref('users/' + success.user.uid + '/userDetails').on('value', (snapShot) => {
                         console.log(snapShot.val())
                         const currentUser = snapShot.val()
@@ -65,9 +103,12 @@ export function SignInAuth(user) {
                         });
                     }).catch(function (error) {
                         console.log("Sign In Error", error);
+                        swal({
+                            type: 'error',
+                            title: 'Error',
+                            text: error.message
+                        })
                     });
-
-
                 })
             })
     }
@@ -90,12 +131,19 @@ export function fbAuth(provider) {
                 }
                 firebase.database().ref('users/' + success.user.uid + '/userDetails').update(obj)
                     .then(() => {
+                        swal({
+                            position: 'center',
+                            type: 'success',
+                            title: 'Successfully Login',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
                         History.push('/home')
                     })
                 dispatch({ type: actionTypes.CURRENTUSER, payload: obj })
             })
             .catch(error => {
-                console.log(error)
+                // console.log(error)
                 console.log(firebase.auth().currentUser, 'current User')
                 firebase.auth().currentUser.linkWithPopup(provider).then(function (result) {
                     // Accounts successfully linked.
@@ -130,16 +178,19 @@ export function fbAuth(provider) {
                             })
                     }).catch(function (error) {
                         console.log("Sign In Error", error);
-
+                        swal({
+                            type: 'error',
+                            title: 'Error',
+                            text: error.message
+                        })
                     });
                     // ...
                 }).catch(function (error) {
-                    // Handle Errors here.
-                    // swal({
-                    //     type: 'error',
-                    //     title: error.message,
-                    // })
-                    // ...
+                    swal({
+                        type: 'error',
+                        title: 'Error',
+                        text: error.message
+                    })
                 });
             })
     }
@@ -250,7 +301,7 @@ export function GetEvent() {
     let events = []
     return dispatch => {
         firebase.database().ref('/events/').on('child_added', (snapShot) => {
-            events = [...events,snapShot.key]
+            events = [...events, snapShot.key]
             // console.log(snapShot.key)
             // console.log(events)
             // console

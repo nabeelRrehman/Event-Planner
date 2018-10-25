@@ -43,15 +43,16 @@ class EventCard extends Component {
 
     componentWillReceiveProps(props) {
         // console.log('run')
-        this.fetchData(props)        
+        console.log(props.goings, 'hhhhhhhhhhhh')
+        this.fetchData(props)
     }
 
     fetchData(props) {
-        console.log(props.goings)
+        // console.log(props.goings)
         if (props.goings) {
-            console.log(props.goings,'goings')
-            // console.log('array here*******', props.arr)
+            // console.log(props.goings,'goings')
             this.setState({ goings: props.goings })
+            // console.log('array here*******', props.arr)
         }
         if (props.arr) {
             this.setState({ arr: props.arr })
@@ -71,7 +72,8 @@ class EventCard extends Component {
             this.setState({ reserved: props.reserved })
         }
         if (props.event) {
-            this.setState({ event: props.event })
+            // console.log(props.event,'evvvvvvvv')
+            // this.setState({ event: props.event })
         }
         if (props.totalReserved) {
             this.setState({ totalReserved: props.totalReserved })
@@ -82,12 +84,15 @@ class EventCard extends Component {
     interested(id, key) {
         const { getInterested, userDetails } = this.props
         getInterested(id, key, userDetails.userUid)
+
+        this.setState({ goings: this.props.goings })
     }
 
     notGoing(id, key) {
         const { getNotInterested, userDetails } = this.props
 
         getNotInterested(id, key, userDetails.userUid)
+        this.setState({ notgoings: this.props.notgoings })
     }
 
     eventCard(image, title, description, ticket, price, index, key, seats) {
@@ -216,6 +221,7 @@ function mapStateToProps(state) {
         card: state.eventsReducer.CARD,
         totalReserved: state.eventsReducer.TOTALRESERVED,
         reserved: state.eventsReducer.RESERVEDSEATS,
+
     })
 }
 

@@ -44,11 +44,14 @@ export function UserNotInterest(id, key, user) {
 var arr = []
 
 export function GoingEvents(user) {
-    const goings = []
+    var goings = []
     return dispatch => {
         // console.log('user',user)
         firebase.database().ref('/users/' + user + '/goingEvents/').on('child_added', (snapShot) => {
             goings.push(snapShot.key)
+            // console.log(snapShot.key)
+            // console.log(goings,"jhjkhjkhjkh")
+
             arr.push(snapShot.key)
             // this.setState({ goings, arr })
             dispatch({ type: actionTypes.GOING, payload: goings })
@@ -65,8 +68,8 @@ export function GoingEvents(user) {
                     dispatch({ type: actionTypes.ARRAY, payload: arr })
                     
                 }
+                console.log(goings,'Action going Events')
                 dispatch({ type: actionTypes.GOING, payload: goings })
-                // console.log(goings)
             }
         })
     }

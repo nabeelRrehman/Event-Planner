@@ -7,6 +7,7 @@ import { SignInAuth } from '../../store/action/action'
 import { fbAuth } from '../../store/action/action'
 import { googleAuth } from '../../store/action/action'
 import firebase from 'firebase'
+import History from '../../History/History'
 
 const fb_provider = new firebase.auth.FacebookAuthProvider()
 
@@ -23,6 +24,16 @@ class Login extends Component {
 
     signupPage() {
         this.props.history.push('/signup')
+    }
+
+    componentWillReceiveProps(props) {
+        const { userUid } = props
+        userUid &&
+            userUid.userUid ?
+            // console.log(userUid.userUid, 'user uid here')
+            History.push('/home') :
+            null
+
     }
 
     login() {
@@ -74,7 +85,7 @@ class Login extends Component {
                                 </h5>
                                 <button className='signuplink'>
                                     <img className='_image' onClick={() => this.fbLogin()} alt={'facebook'} src={Facebook} />
-                                    <img className='_image' onClick={()=> this.googleLogin()} alt={'google+'} src={Google} />
+                                    <img className='_image' onClick={() => this.googleLogin()} alt={'google+'} src={Google} />
                                 </button>
                             </div>
                         </div>
@@ -90,7 +101,8 @@ class Login extends Component {
 function mapStateToProps(state) {
     return ({
         user: state.authReducer.CURRENTUSER,
-        profile_pic : state.authReducer.PROFILE_PIC,
+        profile_pic: state.authReducer.PROFILE_PIC,
+        userUid: state.authReducer.USERUID,
     })
 }
 

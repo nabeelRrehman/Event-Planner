@@ -17,6 +17,26 @@ class NotGoingEvent extends Component {
         }
     }
 
+    componentDidMount() {
+        const { events } = this.state
+
+        this.props.card.length ?
+            this.props.card.map(items => {
+                this.props.notgoings &&
+                    this.props.notgoings.length ?
+                    this.props.notgoings.map(it => {
+                        items.key === it &&
+                            events.indexOf(items) === -1 &&
+                            events.push(items) &&
+                            this.setState({ events }, () => {
+                                console.log(this.state.events)
+                            })
+                    }) :
+                    null
+            }) :
+            null
+    }
+
     componentWillReceiveProps(props) {
         // const { notGoingEvents } = this.state
 
@@ -30,31 +50,25 @@ class NotGoingEvent extends Component {
             this.setState({ notGoingEvents: props.notgoings })
         }
         if (props.card !== this.props.card) {
-            console.log(props.card, 'card')
-            props.card.map(items => {
-                return (
-                    props.notgoings.map(it => {
-                        items.key === it &&
-                            events.indexOf(items) === -1 &&
-                            events.push(items) &&
-                            this.setState({ events }, () => {
-                                console.log(this.state.events)
-                            })
-                    })
-                )
-            })
+            props.card &&
+                props.card.length ?
+                props.card.map(items => {
+                    // return (
+                    props.notgoings &&
+                        props.notgoings.length ?
+                        props.notgoings.map(it => {
+                            items.key === it &&
+                                events.indexOf(items) === -1 &&
+                                events.push(items) &&
+                                this.setState({ events }, () => {
+                                    console.log(this.state.events)
+                                })
+                        }) :
+                        null
+                    // )
+                }) :
+                null
         }
-    }
-
-    componentDidMount() {
-        // const { notGoingEvents } = this.state
-        // if (notGoingEvents) {
-        //     swal({
-        //         showConfirmButton: false,
-        //         timer: 100
-        //     })
-        // }
-        // const user = localStorage.getItem('userUid')
     }
 
     render() {

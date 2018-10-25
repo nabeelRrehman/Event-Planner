@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHome } from '@fortawesome/free-solid-svg-icons'
 import { faTicketAlt } from '@fortawesome/free-solid-svg-icons'
 import { connect } from 'react-redux'
-
+import firebase from 'firebase'
 
 library.add(faHome)
 library.add(faTicketAlt)
@@ -18,12 +18,17 @@ class Container extends Component {
         this.state = {
             // profile_pic : ''
         }
+        this.logout = this.logout.bind(this)
     }
 
     componentWillReceiveProps(props) {
         if (props.userDetails) {
             this.setState({ profile_pic: props.userDetails.profile_pic })
         }
+    }
+
+    logout() {
+        // firebase.auth().signOut()
     }
 
     render() {
@@ -37,7 +42,7 @@ class Container extends Component {
                     <h1>Events</h1>
                     <div className='profile_pic_div'><img alt={'profile_pic'} className={'profile_pic'} src={profile_pic || Anonymous} /></div>
                     <div>
-                        <button onClick={this.props.logout}>Logout</button>
+                        <button onClick={this.logout}>Logout</button>
                     </div>
                 </div>
                 <div>
